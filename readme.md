@@ -106,6 +106,26 @@ function MyFunctionObject() {
    (function(){......})();
 ````
 
+# jQuery
+- Download the jQuery for Current Project OR Use 'Content-Delivery-Network (CDN)'
+- JS Library for DOM aka UI
+- USe '$' for 
+    - Extracting DOM Element
+        - by id
+            - $("#{ID-OF-ELEMENT}")
+        - by class name
+            - $(".{CLASS-NAME-APPLIED-TO-ELEMENT}")    
+        - by tag name
+            - $('{TAG-NAME}')     
+    - Attaching Event to an element
+        - $("#{ID}").on('EVENT-NAME', function(){...});
+    - For Plugins (ready-to-use-custom-functions)
+        - loops
+            - $.each()
+                - for..each loop
+            - $.ajax()
+                - AJAX Call    
+
 
 
  
