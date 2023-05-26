@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery/dist/jquery.js"></script>
+    <script>
+        // window.onload = function() {
+        //     // 1. Read ELement based on id
+
+        //     var btn = document.getElementById('btnClick');
+        //     // 2. Add Click event
+        //     btn.addEventListener('click',function(){
+        //         alert(`Hello Mr./Mrs. JavaScript, you are headache `);
+        //     },false);
+        // }
+
+        $(document).ready(function(){
+            // 1. Read button by id
+            $("#btnClick").on('click',function(){
+                alert('jQuery I Like you!!');
+            });    
+
+            $("#btnAdd").on('click',function(){
+                // Parse Data in X and Y input elements as number
+                // by default they are string
+                // val() is a function to read/write value
+                var x = parseInt($("#txtX").val());
+                var y = parseInt($("#txtY").val()); 
+
+                var z = x + y;
+
+                // Set value to Result
+                $("#txtResult").val(z);
+
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <h1>My jQuery First App</h1>
+    <input type="button" id="btnClick" value="Click Me"/> 
+    <br/>
+    X: <input type="text" id="txtX"/>
+    <br/>
+   Y: <input type="text" id="txtY"/>
+    <br/>
+   Result: <input type="text" id="txtResult"/>
+    <br/>
+    <input type="button" id="btnAdd" value="+"/> 
+</body>
+</html>

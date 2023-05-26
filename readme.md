@@ -128,4 +128,23 @@ function MyFunctionObject() {
 
 
 
+# Async Calls from jQuery
+
+- $.ajax(options).done().fail()
+
+    - options: the JSON Object with following properties
+        - url: URL of external API / Controller's Action
+        - method / type: HTTP Method (HET/POST/PUT/DELETE), default is GET
+        - data: Data to be posted
+        - datatype : type of data posted to server
+        - contenttype : AKA MIME TYPE AKA Media Forfmatter, the format of data posted to server
+            - e.g.
+                - application/json
+    - done(Callback-fuction)
+        - The success callback, this will be executed when the call is 
+        - THis function will have a response object that represents teh response received from API
+    - fail(callback-function)    
+        - This error callback, this will be executed when the call is failed
+        - THis fucntion will accept error objet that represents the error occurred during AJAXs call
+
  

@@ -1,0 +1,206 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="./bootstrap/dist/css/bootstrap.min.css" />
+        <script src="./jquery//dist/jquery.js"></script>
+
+        <style>
+            .disableElement {
+                disabled:true
+            }
+        </style>
+        <script>
+        $(document).ready(function(){
+            var departments=[];  
+            
+            var remoteUrl = "https://localhost:7196/api/DepartmentAPI";
+            // THis method will be executed when the HTML pge is loaded    
+            loadData();
+
+            $("#btnnew").on('click',function(){
+                // extract all input elements having class as form-control
+                // and clear its value
+                // class selector  
+                // ALl those HTML DOM element 
+                // having class attribute having value as 'form-control'   
+                $(".form-control").val('');
+            });    
+
+            $("#btnadd").on('click',function(){
+                // define a JSON data object
+                var dept =  {
+                    DeptNo:parseInt($("#txtdno").val()),
+                    DeptName:$("#txtdname").val(),
+                    Location:$("#txtloc").val(),
+                    Capacity:parseInt($("#txtcap").val())
+                };    
+
+                console.log(JSON.stringify(dept));
+                $.ajax({
+                    url:remoteUrl,
+                    type:'POST',
+                    data:JSON.stringify(dept),
+                    contentType:'application/json',
+                    dataType:'json'
+                }).done(function(response){
+                    $("#dvmessage").html("Data is successfully Added");
+                    // PUsh the new Created record in Departments array
+                    departments.push(response.Record);
+                    generateTable(departments);
+                }).fail(function(error){
+                    $("#dvmessage").html(error);
+                });
+            });
+
+
+            $("#btnedit").on('click',function(){
+                // define a JSON data object
+                var dept =  {
+                    DeptNo:parseInt($("#txtdno").val()),
+                    DeptName:$("#txtdname").val(),
+                    Location:$("#txtloc").val(),
+                    Capacity:parseInt($("#txtcap").val())
+                };    
+
+                console.log(JSON.stringify(dept));
+                // For PUT pass the DEptNO in URL
+                $.ajax({
+                    url:`${remoteUrl}/${dept.DeptNo}`,
+                    type:'PUT',
+                    data:JSON.stringify(dept),
+                    contentType:'application/json',
+                    dataType:'json'
+                }).done(function(response){
+                    $("#dvmessage").html("Data is successfully Modified");
+                    loadData();
+                }).fail(function(error){
+                    $("#dvmessage").html(error);
+                });
+            });
+
+
+            $("#btndelete").on('click',function(){
+ 
+                // For DELETE pass the DEptNO in URL
+                $.ajax({
+                    url:`${remoteUrl}/${$("#txtdno").val()}`,
+                    type:'DELETE' 
+                }).done(function(response){
+                    $("#dvmessage").html("Data is successfully Modified");
+                    // INstead of alling loadData() 
+                    // JUst find the DeptNo from Departments array
+                    // and splice(delete) it from array
+                    loadData();
+                }).fail(function(error){
+                    $("#dvmessage").html(error);
+                });
+            });
+            
+            $("#txtdno").on('change',function(){
+                // SInce we are in the event of txtdno, the 'this'
+                // represents txtdno here
+                var dno = $(this).val();
+                $.ajax({
+                     url:`${remoteUrl}/${dno}`,
+                     type: 'GET'
+                }).done(function(response){
+                    //alert(JSON.stringify(response));
+                    console.log(JSON.stringify(response));
+                    var dept = response.Record;
+                    $("#txtdname").val(dept.DeptName);
+                    $("#txtloc").val(dept.Location);
+                    $("#txtcap").val(dept.Capacity);
+                    $("#txtdno").prop('disabled', true);
+                }).fail(function(error){
+                    $("#dvmessage").html(error);
+                });
+            });    
+
+
+            function loadData(){
+                $.ajax({
+                     url:remoteUrl,
+                     type: 'GET'
+                }).done(function(response){
+                    //alert(JSON.stringify(response));
+                    console.log(JSON.stringify(response));
+                    departments = response.Records;
+                    generateTable(departments);
+                }).fail(function(error){
+                    $("#dvmessage").html(error);
+                });
+            }
+
+            function generateTable(depts) {
+                var rows="";
+                $.each(depts, function(index,val){
+                    rows+=`<tr><td>${val.DeptNo}</td><td>${val.DeptName}</td><td>${val.Location}</td><td>${val.Capacity}</td></tr>`
+                });
+
+                $("#tbody").html(rows);
+            }
+        });
+        </script>
+    </head>
+    <body>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td>DeptNo</td>
+                <td>
+                    <input type="text" id="txtdno" class="form-control" >
+                </td>
+            </tr>
+            <tr>
+                <td>DeptName</td>
+                <td>
+                    <input type="text" id="txtdname" class="form-control" >
+                </td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td>
+                    <input type="text" id="txtloc" class="form-control" >
+                </td>
+            </tr>
+            <tr>
+                <td>Capacity</td>
+                <td>
+                    <input type="text" id="txtcap" class="form-control" >
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="btn btn-group-lg">
+                    <input type="button" id="btnnew" value="New" class="btn btn-primary" >
+                 
+                    <input type="button" id="btnadd" value="Add" class="btn btn-success">
+                 
+                    <input type="button" id="btnedit" value="Edit" class="btn btn-warning">
+                 
+                    <input type="button" id="btndelete" value="Delete" class="btn btn-danger">
+                </td>
+            </tr>
+        </table>
+        <br/>
+        <div id="dvmessage"></div>
+        <hr/>
+        <table class="table table-bordered table-striped table-dark">
+            <thead>
+                <tr>
+                    <th>
+                        DeptNo
+                    </th>
+                    <th>
+                        DeptName
+                    </th>
+                    <th>
+                        Location
+                    </th>
+                    <th>
+                        Capacity
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </body>
+</html>
